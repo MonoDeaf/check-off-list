@@ -1,0 +1,500 @@
+<html><head><base href="/" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* Extending existing styles with updated button designs and animations */
+body {
+    background-color: #090909;
+    color: #ffffff;
+    font-family: Montserrat, Arial;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.task-card {
+    background-color: #111111;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 20px;
+    padding-bottom: 30px; /* Increased to make room for progress bar */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.task-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.task-description {
+    font-size: 0.9em;
+    color: #888888;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.step-description {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+.task-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.task-button, .checkoff-button {
+    aspect-ratio: auto; /* Remove fixed aspect ratio */
+    min-height: 80px; /* Add minimum height */
+    font-size: 0.9em;
+    font-weight: 400;
+    background-color: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 15px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start; /* Changed from center to flex-start */
+}
+
+.task-button:hover, .checkoff-button:hover {
+    background-color: #2a2a2a;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.task-button.visited, .checkoff-button.visited {
+    background-color: #2a2a2a;
+    color: #888888;
+}
+
+.task-button::after {
+    content: "\f08e"; /* Font Awesome external link icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #32CD32;
+    transition: transform 0.3s ease;
+}
+
+.checkoff-button::after {
+    content: "\f111"; /* Font Awesome circle icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 400;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #32CD32;
+    transition: transform 0.3s ease;
+}
+
+.task-button.visited::after {
+    content: "\f00c"; /* Font Awesome checkmark */
+    font-weight: 900;
+    color: #4CAF50;
+    transform: translateY(0) scale(1.1);
+}
+
+.checkoff-button.visited::after {
+    content: "\f00c"; /* Font Awesome checkmark */
+    font-weight: 900;
+    color: #4CAF50;
+    transform: translateY(0) scale(1.1);
+}
+
+/* Add padding-right to prevent text overlap with icons */
+.task-button .step-content,
+.checkoff-button .step-content {
+    padding-right: 30px;
+}
+
+/* Updated progress bar styling */
+.progress-bar {
+    position: absolute;
+    bottom: 10px; /* Changed from 0 to 10px */
+    left: 10px; /* Added left margin */
+    width: calc(100% - 20px); /* Adjust width to account for margins */
+    height: 6px; /* Changed from 3px to 6px */
+    background-color: #1e1e1e;
+    overflow: hidden;
+    border-radius: 3px; /* Added rounded edges */
+}
+
+.progress-fill {
+    height: 100%;
+    background: #32CD32; /* Changed from gradient to solid lime green */
+    transition: width 0.3s ease;
+    width: 0%;
+    border-radius: 3px; /* Added rounded edges */
+}
+
+.task-card:not(.completed) .task-button:not(.visited):hover,
+.task-card:not(.completed) .checkoff-button:not(.visited):hover {
+    /* Remove animation property - the scale effect will come from the original hover styles */
+}
+
+/* Add these styles to restore the circular step numbers */
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #111111;
+    border-radius: 50%;
+    margin-right: 8px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+/* Update the step content to properly align with circular numbers */
+.step-content > div:first-child {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="task-grid">
+            <!-- Social Media Sharing -->
+            <div class="task-card">
+                <div class="task-title">Message Your Top Listeners On Soundcloud</div>
+                <div class="task-description">Establish a deep connection with your power listeners by viewing who is listening to your music the most on Soundcloud. Send a personal message giving appreciation, and let them know of upcoming new music, as they are eager to hear more from you.</div>
+                <div class="task-steps">
+                    <a href="https://artists.soundcloud.com/fans" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Visit Soundcloud For Artists Fan Page
+                            </div>
+                            <div class="step-description">
+                                Go to your personal Soundcloud For Artists fans page to see who are your 'most engaged' fans.
+                            </div>
+                        </div>
+                    </a>
+                    <button class="checkoff-button" data-task="follow-listeners">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Send A Message
+                            </div>
+                            <div class="step-description">
+                                Send a personal appreciation message for being your most loyal listener!
+                            </div>
+                        </div>
+                    </button>
+                    <button class="checkoff-button" data-task="engage-comments">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Send A Link To Latest Release
+                            </div>
+                            <div class="step-description">
+                                Send a link to your latest release on Soundcloud. Listeners with high engagement deserve a VIP gateway to your latest release!
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Artist Playlist -->
+            <div class="task-card">
+                <div class="task-title">Create Artist Playlist</div>
+                <div class="task-description">Create and curate your very own Artist Playlist to attach to your Spotify artist account.</div>
+                <div class="task-steps">
+                    <a href="https://open.spotify.com/" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Create A New Playlist
+                            </div>
+                            <div class="step-description">
+                                Create a playlist on your Spotify *user* account. This will be the playlist that is attached to your artist account soon.
+                            </div>
+                        </div>
+                    </a>
+                    <button class="checkoff-button" data-task="prepare-release">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Add Music And Cover Art
+                            </div>
+                            <div class="step-description">
+                                Get your artwork ready (3000x3000px) and add your favorite music created by you! If you don't have a large discography, you can create a mix of your music and music you enjoy from other artists.
+                            </div>
+                        </div>
+                    </button>
+                    <a href="https://artists.spotify.com" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Set Playlist As Artist Playlist
+                            </div>
+                            <div class="step-description">
+                                Sign into your Spotify For Artists account and set the playlist you have created as your Artist Playlist. By promoting this playlist, you promote all of your music in one spot, making this a valuable marketing strategy.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Music Marketing -->
+            <div class="task-card">
+                <div class="task-title">Marketing Essentials</div>
+                <div class="task-description">Build your marketing foundation with essential tools for promoting your music and engaging with fans.</div>
+                <div class="task-steps">
+                    <a href="https://mailchimp.com/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Create Email Newsletter
+                            </div>
+                            <div class="step-description">
+                                Set up a mailing list to keep fans updated. Create a welcome email and plan regular content updates for your subscribers.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://www.canva.com/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Design Promotional Graphics
+                            </div>
+                            <div class="step-description">
+                                Create eye-catching visuals to accompany your releases and announcements.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://www.wix.com/start/create-website" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Build Artist Website
+                            </div>
+                            <div class="step-description">
+                                Showcase your music, bio, and upcoming events in one place.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Networking -->
+            <div class="task-card">
+                <div class="task-title">Music Industry Networking</div>
+                <div class="task-description">Connect with industry professionals, fellow musicians, and build valuable relationships in the music community.</div>
+                <div class="task-steps">
+                    <a href="https://www.linkedin.com/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Create LinkedIn Profile
+                            </div>
+                            <div class="step-description">
+                                Establish a professional presence and connect with industry peers.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://soundcloud.com/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Join SoundCloud Community
+                            </div>
+                            <div class="step-description">
+                                Interact with other artists and fans on the platform.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://discord.com/register" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Join Music Discord Servers
+                            </div>
+                            <div class="step-description">
+                                Participate in discussions and share your music with others.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Playlist Promotion -->
+            <div class="task-card">
+                <div class="task-title">Playlist Promotion</div>
+                <div class="task-description">Increase your music's visibility by getting featured on playlists and creating engaging promotional campaigns.</div>
+                <div class="task-steps">
+                    <a href="https://submitHub.com/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Sign Up for SubmitHub
+                            </div>
+                            <div class="step-description">
+                                Create an account, upload your tracks, and start submitting to playlist curators. Focus on playlists that match your genre.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://playlist.push.com" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Join PlaylistPush
+                            </div>
+                            <div class="step-description">
+                                Connect with playlist curators and submit your music for consideration.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://www.toneden.io/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Create Music Gate Links
+                            </div>
+                            <div class="step-description">
+                                Use music gates to collect emails and build your fanbase.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Content Creation -->
+            <div class="task-card">
+                <div class="task-title">Content Creation</div>
+                <div class="task-description">Expand your reach by creating diverse content formats to showcase your music and personality.</div>
+                <div class="task-steps">
+                    <a href="https://www.youtube.com/create_channel" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">1</span>Start YouTube Channel
+                            </div>
+                            <div class="step-description">
+                                Share your music and connect with fans through video content.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://anchor.fm/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">2</span>Launch Music Podcast
+                            </div>
+                            <div class="step-description">
+                                Discuss your music journey and interview other artists.
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://www.twitch.tv/signup" target="_blank" class="task-button">
+                        <div class="step-content">
+                            <div>
+                                <span class="step-number">3</span>Set Up Twitch Stream
+                            </div>
+                            <div class="step-description">
+                                Engage with fans live and perform your music in real-time.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Handle regular link buttons
+document.querySelectorAll('.task-button').forEach(button => {
+    const isVisited = localStorage.getItem(button.href);
+    if (isVisited) {
+        button.classList.add('visited');
+    }
+
+    button.addEventListener('click', () => {
+        button.classList.add('visited');
+        localStorage.setItem(button.href, 'true');
+        checkTaskCompletion(button.closest('.task-card'));
+        updateProgressBar(button.closest('.task-card'));
+    });
+});
+
+// Handle checkoff buttons
+document.querySelectorAll('.checkoff-button').forEach(button => {
+    const taskId = button.dataset.task;
+    const isCompleted = localStorage.getItem(`checkoff-${taskId}`);
+    if (isCompleted) {
+        button.classList.add('visited');
+    }
+
+    button.addEventListener('click', () => {
+        button.classList.add('visited');
+        localStorage.setItem(`checkoff-${taskId}`, 'true');
+        checkTaskCompletion(button.closest('.task-card'));
+        updateProgressBar(button.closest('.task-card'));
+    });
+});
+
+function updateProgressBar(taskCard) {
+    const allButtons = taskCard.querySelectorAll('.task-button, .checkoff-button');
+    const completedButtons = taskCard.querySelectorAll('.task-button.visited, .checkoff-button.visited');
+    const progress = (completedButtons.length / allButtons.length) * 100;
+    taskCard.querySelector('.progress-fill').style.width = `${progress}%`;
+}
+
+function checkTaskCompletion(taskCard) {
+    const allButtons = taskCard.querySelectorAll('.task-button, .checkoff-button');
+    const allCompleted = Array.from(allButtons).every(btn => {
+        if (btn.classList.contains('task-button')) {
+            return localStorage.getItem(btn.href);
+        } else {
+            return localStorage.getItem(`checkoff-${btn.dataset.task}`);
+        }
+    });
+    
+    if (allCompleted) {
+        taskCard.classList.add('completed');
+    }
+}
+
+// Check initial state of task cards and update progress bars
+document.querySelectorAll('.task-card').forEach(card => {
+    checkTaskCompletion(card);
+    updateProgressBar(card);
+});
+</script>
+</body>
+</html>
